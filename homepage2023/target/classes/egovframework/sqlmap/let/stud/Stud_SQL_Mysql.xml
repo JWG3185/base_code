@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="stud">
+
+	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias  alias="studVO" type="egovframework.let.stud.service.StudVO"/>
+
+	<resultMap id="stud" class="egovframework.let.stud.service.StudVO">
+		<result property="studNum" column="STUD_NUM"/>
+		<result property="studName" column="STUD_NAME"/>
+	</resultMap>
+
+ 	<select id="StudDAO.selectStud" parameterClass="studVO" resultMap="stud" >
+ 		SELECT
+		  STUD_NUM
+		  , STUD_NAME
+		FROM letstud
+		WHERE STUD_NUM = #studNum#
+ 	</select>
+	
+</sqlMap>
