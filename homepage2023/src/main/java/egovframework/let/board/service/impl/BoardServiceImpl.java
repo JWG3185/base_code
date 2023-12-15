@@ -63,4 +63,3 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 	
 }
-// 셀렉트로 호출을 할 때, 로직이 들어가는 곳

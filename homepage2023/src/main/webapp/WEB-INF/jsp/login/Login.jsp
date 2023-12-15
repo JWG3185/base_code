@@ -10,7 +10,7 @@
 <head>
 <meta http-equiv="Content-Language" content="ko" >
 <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-<meta name="viewport" content="width=dievice-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no" />
 <title>로그인</title>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <link rel="stylesheet" href="/asset/member/css/login.css">
@@ -36,6 +36,16 @@
 								<input type="password" id="pwd" name="password" value="" class="inp" title="비밀번호 입력" placeholder="비밀번호를 입력하세요." autocomplete="off" />
 							</span>
 							<button type="submit" class="btn-lg spot p10">로그인</button>
+							
+							<div class="btn-cont">
+								<a class="btn-kakao" href="#" data-type="login">
+									<img alt="카카오 로그인 버튼" width="200" src="http://k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" />
+								</a>
+								<a class="btn-naver" href="${naverAuthUrl}" data-type="login">
+									<img alt="네이버 로그인 버튼" width="180" src="/asset/front/images/common/btn-naver.png" />
+								</a>
+							</div>
+							
 						</fieldset>
 					</form>
 				</div>
@@ -74,9 +84,57 @@ function checkGnrlLogin(frm) {
 $(document).ready(function() {
 	// 아이디 입력창 포커스 설정
 	$('#id').focus();
-	
+});
+</script>
+
+<form id="frmLogin" name="frmLogin" method="post" action="/login/actionLogin.do">
+	<input type="hidden" name="loginType" value="" />
+	<input type="hidden" name="id" id="snsId" />
+
+</form>
+
+<script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+<script>
+$(document).ready(function () {
+	//카카오 로그인 버튼
+	$(".btn-kakao").click(function () {
+		const type = $(this).data("type");
+		kakaoLogin(type);
+		return false;
+	});
 });
 
+//카카오 키 정보 입력
+Kakao.init('30933b7263cd751325cb49c4cd0c49c5');
+
+// 카카오SDK 초기화
+Kakao.isInitialized();
+
+// 카카오 로그인
+function kakaoLogin(type) {
+	Kakao.Auth.login({
+		success: function (response) {
+			Kakao.API.request({
+				url: '/v2/user/me',
+				success: function (response) {
+					console.log(response);
+					$("input[name=loginType]").val("KAKAO");
+					$("#snsId").val(response.id);
+					$("#frmLogin").submit();
+				},
+				fail: function (error) {
+					console.log(error);
+				}
+			})
+		}, 
+		fail: function (error) {
+			console.log(error);
+		}
+	})
+}
 </script>
+
+
 </body>
 </html>

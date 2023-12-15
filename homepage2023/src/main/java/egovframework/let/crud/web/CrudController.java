@@ -25,6 +25,7 @@ public class CrudController {
 	//CRUD 목록 가져오기
 	@RequestMapping(value = "/crud/selectList.do")
 	public String selectList(CrudVO crudVO, HttpServletRequest request, ModelMap model) throws Exception{
+		
 		PaginationInfo paginationInfo = new PaginationInfo();
 
 		paginationInfo.setCurrentPageNo(crudVO.getPageIndex());
@@ -41,6 +42,7 @@ public class CrudController {
 		int totCnt = crudService.selectCrudListCnt(crudVO);
 
 		paginationInfo.setTotalRecordCount(totCnt);
+		
 		model.addAttribute("paginationInfo", paginationInfo);
 
 		return "crud/CrudSelectList";

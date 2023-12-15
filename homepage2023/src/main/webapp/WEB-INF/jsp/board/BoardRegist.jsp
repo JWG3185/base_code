@@ -10,7 +10,7 @@
 <head>
 <meta http-equiv="Content-Language" content="ko" >
 <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-<meta name="viewport" content="width=dievice-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <meta http-equiv="Content-Language" content="ko" >
 <title>작성 페이지</title>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>

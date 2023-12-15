@@ -14,18 +14,23 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.let.api.naver.service.NaverLoginService;
 import egovframework.let.join.service.JoinService;
 import egovframework.let.join.service.JoinVO;
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.sf.json.JSONObject;
 
 @Controller
 public class JoinController {
 	
 	@Resource(name = "egovMessageSource")
-	EgovMessageSource egovMessageSource;
+	private EgovMessageSource egovMessageSource;
 
 	@Resource(name = "joinService")
-	JoinService joinService;
+	private JoinService joinService;
+	
+	@Resource(name = "naverLoginService")
+	private NaverLoginService naverLoginService;
 	
 	// 약관 동의
 	@RequestMapping("/join/siteUseAgree.do")
@@ -37,6 +42,12 @@ public class JoinController {
 	// 회원 구분
 	@RequestMapping("/join/memberType.do")
 	public String memberType(@ModelAttribute("searchVO") JoinVO vo, HttpServletRequest request, ModelMap model, HttpSession session) throws Exception{
+		
+		// Naver 
+		String domain = request.getServerName();
+		String port = Integer.toString(request.getServerPort());
+		String naverAuthUrl = naverLoginService.getAuthorizationUrl(session, domain, port);
+		model.addAttribute("naverAuthUrl", naverAuthUrl);
 		
 		return "join/MemberType";
 	}
@@ -75,15 +86,36 @@ public class JoinController {
 	// 회원가입
 	@RequestMapping("/join/insertMember.do")
 	public String insertMember(@ModelAttribute("searchVO") JoinVO vo, HttpServletRequest request, ModelMap model) throws Exception{
+		if(!EgovStringUtil.isEmpty(vo.getLoginType())) {
+			// 일반 가입을 제외하고는 ID값은 SNS명 + '-' + ID값
+			if(!("normal").equals(vo.getLoginType())) {
+				vo.setEmplyrId(vo.getLoginType() + "-" + vo.getEmplyrId());
+				vo.setPassword("");
+				vo.setPasswordHint("SNS가입자");
+				vo.setPasswordCnsr("SNS가입자");
+			}
+		}
+		
 		if(joinService.duplicateCheck(vo) > 0) {
-			model.addAttribute("message", egovMessageSource.getMessage("fail.duplicate.member") );	// 이미 사용중인 ID입니다.;
+			if(!("normal").equals(vo.getLoginType())) {
+				model.addAttribute("message", "이미 등록된 SNS 계정입니다.");
+			}
+			else {
+				model.addAttribute("message", egovMessageSource.getMessage("fail.duplicate.member") );	// 이미 사용중인 ID입니다.;
+			}
 			return "forward:/join/memberType.do";
 		}
 		else {
 			joinService.insertJoin(vo);
 			model.addAttribute("message", egovMessageSource.getMessage("join.request.msg") );	// 회원신청이 정상적으로 완료되었습니다. \n로그인 후 이용해 주세요.;
 		}
+		
 		return "join/MemberComplete";
 	}
+	
+	
+	
+	
+	
 	
 }

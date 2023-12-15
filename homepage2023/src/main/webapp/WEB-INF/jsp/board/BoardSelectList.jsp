@@ -10,7 +10,7 @@
 <head>
 <meta http-equiv="Content-Language" content="ko" >
 <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-<meta name="viewport" content="width=dievice-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=no" />
 <title>수업용 게시판</title>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -36,7 +36,9 @@
 <%-- 기본 URL --%>
 <c:url var="_BASE_PARAM" value="">
 	<c:param name="boardType" value="${boardType}" />
-	<c:if test="${not empty searchVO.searchCondition}"><c:param name="searchCondition" value="${searchVO.searchCondition}" /></c:if>
+	<c:if test="${not empty searchVO.searchCondition}">
+		<c:param name="searchCondition" value="${searchVO.searchCondition}" />
+	</c:if>
 	<c:if test="${not empty searchVO.searchKeyword}"><c:param name="searchKeyword" value="${searchVO.searchKeyword}" /></c:if>
 </c:url>
 
@@ -214,6 +216,7 @@
 <c:if test="${not empty message}">
 	alert("${message}");
 </c:if>
+
 </script>
 
 </body>
